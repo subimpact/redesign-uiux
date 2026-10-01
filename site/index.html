@@ -405,6 +405,36 @@
     color: var(--color-muted-foreground);
   }
 
+  /* Browse-all style list */
+  .style-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: var(--space-sm);
+  }
+  .style-item {
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    background: transparent;
+    color: var(--color-muted-foreground);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.45;
+    text-align: left;
+    transition: border-color 200ms ease, color 200ms ease, background 200ms ease;
+  }
+  .style-item:hover {
+    border-color: var(--color-accent);
+    color: var(--color-foreground);
+  }
+  .style-item b {
+    display: block;
+    color: var(--color-foreground);
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+
   /* How it works: numbered line list */
   .steps {
     list-style: none;
@@ -543,7 +573,7 @@
 
   <!-- Stat strip: inline mono line -->
   <section class="stats container" aria-label="Catalog size">
-    <p><b>89</b> styles &middot; <b>119</b> UX guidelines &middot; <b>22</b> stack guides &middot; browsable by plain command</p>
+    <p><b>50</b> styles &middot; <b>119</b> UX guidelines &middot; <b>22</b> stack guides &middot; browsable by plain command</p>
   </section>
 
   <!-- Two layers, one bridge: 7/5 asymmetric grid -->
@@ -567,6 +597,15 @@
         <p class="demo-caption">Real BM25, scored in your browser over the embedded styles catalog.</p>
       </div>
     </div>
+  </section>
+
+  <!-- Browse all styles: the full embedded catalog, no search needed -->
+  <section class="section container" id="all-styles">
+    <div class="section-head">
+      <h2>All 50 styles</h2>
+      <p>The complete active styles catalog, the same data the search above ranks. Click any style to run it through the search.</p>
+    </div>
+    <div class="style-grid" id="style-grid" aria-label="All catalog styles"></div>
   </section>
 
   <!-- Dial bridge: live command line -->
@@ -778,6 +817,30 @@
     void output.offsetWidth;
     output.classList.add("reveal");
   });
+
+  /* Browse all: render the full catalog list; clicking fills + submits the search form. */
+  var grid = document.getElementById("style-grid");
+  if (grid) {
+    STYLES.forEach(function (style) {
+      var card = document.createElement("button");
+      card.type = "button";
+      card.className = "style-item";
+      card.setAttribute("aria-label", "Search the catalog for " + style.t);
+      var name = document.createElement("b");
+      name.textContent = style.t;
+      var best = document.createElement("span");
+      best.textContent = style.b.split(",")[0];
+      card.appendChild(name);
+      card.appendChild(best);
+      card.addEventListener("click", function () {
+        document.getElementById("search-input").value = style.t;
+        form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+        document.getElementById("demo-search").scrollIntoView({ block: "center" });
+        setTimeout(function () { input.focus({ preventScroll: true }); }, 350);
+      });
+      grid.appendChild(card);
+    });
+  }
 
   /* Demo 2: live dial bridge command + copy with inline feedback. */
   var QUERY = '"modern saas landing"';

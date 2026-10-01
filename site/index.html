@@ -387,7 +387,8 @@
     flex-wrap: wrap;
     gap: var(--space-sm);
   }
-  .chip {
+  a.chip {
+    display: inline-block;
     padding: 7px 14px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-control);
@@ -395,8 +396,13 @@
     font-size: 13px;
     color: var(--color-muted-foreground);
     background: transparent;
-    transition: border-color 200ms ease, color 200ms ease;
+    text-decoration: none;
     text-transform: uppercase;
+    transition: border-color 200ms ease, color 200ms ease;
+  }
+  a.chip:hover {
+    border-color: var(--color-accent);
+    color: var(--color-foreground);
   }
 
   .chips-note {
@@ -647,16 +653,16 @@
     </div>
     <p class="chips-note">Ten of the catalog domains in the repo&#39;s data/ directory, searched with one command.</p>
     <div class="chips">
-      <span class="chip">styles</span>
-      <span class="chip">colors</span>
-      <span class="chip">products</span>
-      <span class="chip">typography</span>
-      <span class="chip">google fonts</span>
-      <span class="chip">icons</span>
-      <span class="chip">landing patterns</span>
-      <span class="chip">motion</span>
-      <span class="chip">ux guidelines</span>
-      <span class="chip">charts</span>
+      <a class="chip" href="https://github.com/subimpact/redesign-uiux/blob/main/skills/ui-ux-pro-max/data/styles.csv" target="_blank" rel="noopener" aria-label="Open the styles catalog file on GitHub">styles</a>
+      <a class="chip" href="https://github.com/subimpact/redesign-uiux/blob/main/skills/ui-ux-pro-max/data/colors.csv" target="_blank" rel="noopener" aria-label="Open the colors catalog file on GitHub">colors</a>
+      <a class="chip" href="https://github.com/subimpact/redesign-uiux/blob/main/skills/ui-ux-pro-max/data/products.csv" target="_blank" rel="noopener" aria-label="Open the products catalog file on GitHub">products</a>
+      <a class="chip" href="https://github.com/subimpact/redesign-uiux/blob/main/skills/ui-ux-pro-max/data/typography.csv" target="_blank" rel="noopener" aria-label="Open the typography catalog file on GitHub">typography</a>
+      <a class="chip" href="https://github.com/subimpact/redesign-uiux/blob/main/skills/ui-ux-pro-max/data/google-fonts.csv" target="_blank" rel="noopener" aria-label="Open the google fonts catalog file on GitHub">google fonts</a>
+      <a class="chip" href="https://github.com/subimpact/redesign-uiux/blob/main/skills/ui-ux-pro-max/data/icons.csv" target="_blank" rel="noopener" aria-label="Open the icons catalog file on GitHub">icons</a>
+      <a class="chip" href="https://github.com/subimpact/redesign-uiux/blob/main/skills/ui-ux-pro-max/data/landing.csv" target="_blank" rel="noopener" aria-label="Open the landing patterns catalog file on GitHub">landing patterns</a>
+      <a class="chip" href="https://github.com/subimpact/redesign-uiux/blob/main/skills/ui-ux-pro-max/data/motion.csv" target="_blank" rel="noopener" aria-label="Open the motion catalog file on GitHub">motion</a>
+      <a class="chip" href="https://github.com/subimpact/redesign-uiux/blob/main/skills/ui-ux-pro-max/data/ux-guidelines.csv" target="_blank" rel="noopener" aria-label="Open the ux guidelines catalog file on GitHub">ux guidelines</a>
+      <a class="chip" href="https://github.com/subimpact/redesign-uiux/blob/main/skills/ui-ux-pro-max/data/charts.csv" target="_blank" rel="noopener" aria-label="Open the charts catalog file on GitHub">charts</a>
     </div>
   </section>
 

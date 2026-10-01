@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>redesign-uiux - merged design skill for AI agents</title>
+<style>
+  :root {
+    --color-background: #0F172A;
+    --color-card: #1B2336;
+    --color-muted: #272F42;
+    --color-foreground: #F8FAFC;
+    --color-muted-foreground: #94A3B8;
+    --color-border: #475569;
+    --color-accent: #22C55E;
+    --color-on-accent: #0F172A;
+    --radius-control: 8px;
+    --radius-card: 12px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+    --space-3xl: 64px;
+    --font-body: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-padding-top: 72px; }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+  body {
+    margin: 0;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  a { color: inherit; }
+  a, button, input[type="search"], input[type="range"] { cursor: pointer; }
+  input[type="search"]:not(:focus) { cursor: text; }
+  a:focus-visible, button:focus-visible, input:focus-visible, output:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--radius-control);
+  }
+  .container {
+    max-width: 1140px;
+    margin-inline: auto;
+    padding-inline: 20px;
+  }
+
+  /* Nav: sticky, one row */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(15, 23, 42, 0.92);
+    border-bottom: 1px solid rgba(71, 85, 105, 0.45);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 56px;
+    max-width: 1140px;
+    margin-inline: auto;
+    padding-inline: 14px;
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .brand .dash {
+    font-style: normal;
+    color: var(--color-accent);
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .nav-links a {
+    font-size: 13px;
+    color: var(--color-muted-foreground);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 200ms ease;
+  }
+  .nav-links a:hover { color: var(--color-foreground); }
+
+  /* Buttons: one accent, one outline shape, shared everywhere */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 22px;
+    border-radius: var(--radius-control);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    transition: transform 200ms ease, background 200ms ease, border-color 200ms ease, color 200ms ease, opacity 200ms ease;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-accent {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+  .btn-accent:hover { opacity: 0.88; }
+  .btn-outline {
+    background: transparent;
+    color: var(--color-foreground);
+    border-color: var(--color-border);
+  }
+  .btn-outline:hover { border-color: var(--color-foreground); }
+  .btn-sm { padding: 7px 12px; font-size: 13px; }
+  .nav .btn { margin-left: auto; }
+
+  /* Hero: split on desktop */
+  .hero {
+    padding-block: var(--space-3xl) var(--space-2xl);
+  }
+  @media (min-width: 900px) {
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: var(--space-xl);
+      align-items: center;
+    }
+  }
+  .hero h1 {
+    margin: 0 0 var(--space-md);
+    font-size: clamp(30px, 5.4vw, 46px);
+    line-height: 1.14;
+    letter-spacing: -0.015em;
+    font-weight: 700;
+  }
+  .hero-sub {
+    margin: 0 0 var(--space-lg);
+    max-width: 34em;
+    color: var(--color-muted-foreground);
+    font-size: 17px;
+  }
+  .hero-ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+  }
+  .read-card {
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: var(--space-lg);
+  }
+  .read-label {
+    margin: 0 0 var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-accent);
+    letter-spacing: 0.06em;
+  }
+  .read-line {
+    margin: 0 0 var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-muted-foreground);
+  }
+  .read-table {
+    display: grid;
+    gap: var(--space-sm);
+  }
+  .read-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-muted-foreground);
+  }
+  .read-row b {
+    color: var(--color-foreground);
+    font-weight: 600;
+  }
+  .read-row .val { color: var(--color-accent); }
+
+  /* Stat strip: plain inline mono line, no boxes */
+  .stats {
+    padding-block: var(--space-md) var(--space-3xl);
+  }
+  .stats p {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-muted-foreground);
+  }
+  .stats b {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  /* Section shells: alternating layout families */
+  .section { padding-block: var(--space-2xl); }
+  .section-head { margin: 0 0 var(--space-lg); }
+  .section-head h2 {
+    margin: 0;
+    font-size: clamp(24px, 3.4vw, 32px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .section-head p {
+    margin: var(--space-sm) 0 0;
+    max-width: 46em;
+    color: var(--color-muted-foreground);
+  }
+
+  /* Bridge: 7/5 asymmetric grid */
+  @media (min-width: 900px) {
+    .bridge-grid {
+      display: grid;
+      grid-template-columns: 7fr 5fr;
+      gap: var(--space-xl);
+      align-items: start;
+    }
+  }
+  .bridge-prose p {
+    margin: 0 0 var(--space-md);
+    max-width: 46em;
+    color: var(--color-muted-foreground);
+  }
+  .bridge-prose p:last-child { margin-bottom: 0; }
+  .demo-card {
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: var(--space-lg);
+  }
+  .demo-card h3 {
+    margin: 0 0 var(--space-sm);
+    font-size: 17px;
+    line-height: 1.3;
+  }
+  .demo-note {
+    margin: 0 0 var(--space-md);
+    font-size: 14px;
+    color: var(--color-muted-foreground);
+  }
+  .search-form {
+    display: flex;
+    gap: var(--space-sm);
+  }
+  .search-form input[type="search"] {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 11px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-body);
+    font-size: 15px;
+    transition: border-color 200ms ease;
+  }
+  .search-form input[type="search"]::placeholder { color: var(--color-muted-foreground); }
+  .search-form input[type="search"]:hover { border-color: var(--color-muted-foreground); }
+  .search-form button { flex: 0 0 auto; }
+  .demo-output {
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid rgba(71, 85, 105, 0.5);
+  }
+  .demo-output[hidden] { display: none; }
+  .result-label {
+    margin: 0 0 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+  }
+  .result-title {
+    margin: 0 0 4px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .result-desc {
+    margin: 0 0 8px;
+    font-size: 14px;
+    color: var(--color-muted-foreground);
+  }
+  .result-keywords {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-muted-foreground);
+  }
+  .demo-caption {
+    margin: var(--space-sm) 0 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-muted-foreground);
+  }
+
+  /* Dial bridge section */
+  .command-block {
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: var(--space-lg);
+    display: grid;
+    gap: var(--space-lg);
+  }
+  .command-block h3 {
+    margin: 0 0 var(--space-md);
+    font-size: 17px;
+    line-height: 1.3;
+  }
+  .cmd-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+  }
+  .code-line {
+    flex: 1 1 480px;
+    min-width: 0;
+    margin: 0;
+    padding: 14px 16px;
+    border: 1px solid rgba(71, 85, 105, 0.6);
+    border-radius: var(--radius-control);
+    background: var(--color-background);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--color-muted-foreground);
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
+  .code-line .q { color: var(--color-foreground); }
+  .code-line .dial-val { color: var(--color-accent); }
+  .dial-grid {
+    display: grid;
+    gap: var(--space-lg);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 768px) {
+    .dial-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-xl); }
+  }
+  .dial {
+    display: grid;
+    gap: var(--space-sm);
+  }
+  .dial-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  .dial-head span { color: var(--color-foreground); }
+  .dial-head output { color: var(--color-accent); font-weight: 600; }
+  .dial input[type="range"] {
+    width: 100%;
+    accent-color: var(--color-accent);
+  }
+  .dial-scale {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-muted-foreground);
+  }
+
+  /* Catalog chips */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+  .chip {
+    padding: 7px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-muted-foreground);
+    background: transparent;
+    transition: border-color 200ms ease, color 200ms ease;
+    text-transform: uppercase;
+  }
+
+  .chips-note {
+    margin: var(--space-sm) 0 var(--space-md);
+    font-size: 14px;
+    color: var(--color-muted-foreground);
+  }
+
+  /* How it works: numbered line list */
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 46em;
+  }
+  .steps li {
+    display: grid;
+    grid-template-columns: 2.2em 1fr;
+    gap: var(--space-md);
+    padding-block: var(--space-md);
+    border-bottom: 1px solid rgba(71, 85, 105, 0.45);
+  }
+  .steps li:last-child { border-bottom: 0; }
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+  .steps p { margin: 0; font-size: 15px; color: var(--color-foreground); }
+
+  /* Final CTA: one centered card */
+  .cta-card {
+    max-width: 720px;
+    margin-inline: auto;
+    text-align: center;
+    background: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    padding: var(--space-2xl) var(--space-lg);
+  }
+  .cta-card h2 {
+    margin: 0 0 var(--space-md);
+    font-size: clamp(24px, 3.4vw, 32px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .cta-card p {
+    margin: 0 0 var(--space-lg);
+    color: var(--color-muted-foreground);
+  }
+
+  /* Footer: one mono row */
+  .footer {
+    border-top: 1px solid rgba(71, 85, 105, 0.45);
+    padding-block: var(--space-lg);
+  }
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm) var(--space-lg);
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-muted-foreground);
+  }
+  .footer-inner a {
+    color: var(--color-muted-foreground);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 200ms ease;
+  }
+  .footer-inner a:hover { color: var(--color-foreground); }
+
+  /* Small-screen nav tuning: keep one row, no horizontal scroll */
+  @media (max-width: 420px) {
+    .nav-inner { gap: 8px; padding-inline: 12px; }
+    .brand { font-size: 13px; }
+    .nav-links { gap: 9px; }
+    .nav-links a { font-size: 11px; }
+    .nav .btn { padding: 6px 10px; font-size: 12px; }
+    .hero, .section { padding-block: var(--space-xl); }
+    .hero { padding-block: var(--space-2xl) var(--space-xl); }
+    .search-form { flex-direction: column; }
+    .search-form button { width: 100%; }
+    .cmd-row { align-items: stretch; }
+  }
+
+  /* Motion: only short state-feedback transitions, skipped under reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+    html { scroll-behavior: auto; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .demo-output.reveal { animation: reveal 240ms ease; }
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Main">
+  <div class="nav-inner">
+    <a class="brand" href="#top" aria-label="redesign uiux home">redesign<span class="dash">-</span>uiux</a>
+    <div class="nav-links">
+      <a href="#how-it-works">How it works</a>
+      <a href="#dial-bridge">The dial bridge</a>
+    </div>
+    <a class="btn btn-accent btn-sm" href="https://github.com/subimpact/redesign-uiux">GitHub</a>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- Hero: split, left content only -->
+  <section class="hero container">
+    <div class="hero-grid">
+      <div>
+        <h1>Taste judgment, wired to a searchable design catalog.</h1>
+        <p class="hero-sub">The anti-slop taste layer fused with a BM25 catalog engine, queried before a single pixel ships.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-accent" href="https://github.com/subimpact/redesign-uiux">Read the skill</a>
+          <a class="btn btn-outline" href="#dial-bridge">Try the dial bridge</a>
+        </div>
+      </div>
+      <div class="read-card" aria-label="Example design read with dials">
+        <p class="read-label">Design read</p>
+        <p class="read-line">dense developer tool, dark, precise, low ornament</p>
+        <div class="read-table">
+          <div class="read-row"><span>DESIGN_VARIANCE</span><span><b class="val">7</b><b>/10</b></span></div>
+          <div class="read-row"><span>MOTION_INTENSITY</span><span><b class="val">6</b><b>/10</b></span></div>
+          <div class="read-row"><span>VISUAL_DENSITY</span><span><b class="val">4</b><b>/10</b></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stat strip: inline mono line -->
+  <section class="stats container" aria-label="Catalog size">
+    <p><b>89</b> styles &middot; <b>119</b> UX guidelines &middot; <b>22</b> stack guides &middot; browsable by plain command</p>
+  </section>
+
+  <!-- Two layers, one bridge: 7/5 asymmetric grid -->
+  <section class="section container">
+    <div class="section-head">
+      <h2>Two layers, one bridge</h2>
+    </div>
+    <div class="bridge-grid">
+      <div class="bridge-prose">
+        <p>The judgment layer comes from taste-skill. It reads the brief, declares a Design Read, then sets three dials: <strong>DESIGN_VARIANCE</strong>, <strong>MOTION_INTENSITY</strong> and <strong>VISUAL_DENSITY</strong>. An anti-slop rule set keeps the LLM defaults out, and a pre-flight checklist checks the result before anything ships.</p>
+        <p>The catalog engine comes from ui-ux-pro-max. A local BM25 search ranks real catalogs: styles, palettes, font pairings, GSAP motion presets, UX guidelines and 22 stack guides, so every recommendation is grounded in data, not vibes. The dial bridge attaches the dials to the query, and both layers act on the same page.</p>
+      </div>
+      <div class="demo-card" id="demo-search">
+        <h3>Run a query</h3>
+        <p class="demo-note">Type anything, like "dark hero landing" or "developer font pairing".</p>
+        <form class="search-form" id="search-form">
+          <input type="search" id="search-input" placeholder="dark hero landing" aria-label="Catalog query" autocomplete="off">
+          <button type="submit" class="btn btn-accent">Search</button>
+        </form>
+        <div class="demo-output" id="demo-output" hidden aria-live="polite"></div>
+        <p class="demo-caption">Real BM25, scored in your browser over the embedded styles catalog.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dial bridge: live command line -->
+  <section class="section container" id="dial-bridge">
+    <div class="section-head">
+      <h2>The dial bridge</h2>
+      <p>Move the dials and the invocation on the right changes live. This is the exact command the merged skill runs.</p>
+    </div>
+    <div class="command-block">
+      <h3>One command, both layers</h3>
+      <div class="cmd-row">
+        <pre class="code-line" role="img" aria-label="Current dial bridge command">python skills/ui-ux-pro-max/scripts/search.py <span class="q">"modern saas landing"</span> --design-system --variance <span class="dial-val" id="cmd-v">7</span> --motion <span class="dial-val" id="cmd-m">6</span> --density <span class="dial-val" id="cmd-d">4</span></pre>
+        <button type="button" class="btn btn-outline" id="copy-cmd" aria-label="Copy the dial bridge command">Copy</button>
+      </div>
+      <div class="dial-grid">
+        <div class="dial">
+          <div class="dial-head"><span>DESIGN_VARIANCE</span><output id="out-v" for="dial-v">7</output></div>
+          <input type="range" id="dial-v" min="1" max="10" step="1" value="7" aria-label="DESIGN_VARIANCE, 1 is perfect symmetry, 10 is artsy chaos">
+          <div class="dial-scale" aria-hidden="true"><span>symmetry</span><span>chaos</span></div>
+        </div>
+        <div class="dial">
+          <div class="dial-head"><span>MOTION_INTENSITY</span><output id="out-m" for="dial-m">6</output></div>
+          <input type="range" id="dial-m" min="1" max="10" step="1" value="6" aria-label="MOTION_INTENSITY, 1 is static, 10 is cinematic physics">
+          <div class="dial-scale" aria-hidden="true"><span>static</span><span>cinematic</span></div>
+        </div>
+        <div class="dial">
+          <div class="dial-head"><span>VISUAL_DENSITY</span><output id="out-d" for="dial-d">4</output></div>
+          <input type="range" id="dial-d" min="1" max="10" step="1" value="4" aria-label="VISUAL_DENSITY, 1 is airy, 10 is packed data">
+          <div class="dial-scale" aria-hidden="true"><span>airy</span><span>packed</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Catalog strip: plain chips -->
+  <section class="section container" aria-label="Catalog domains">
+    <div class="section-head">
+      <h2>Catalog domains</h2>
+    </div>
+    <p class="chips-note">Ten of the catalog domains in the repo&#39;s data/ directory, searched with one command.</p>
+    <div class="chips">
+      <span class="chip">styles</span>
+      <span class="chip">colors</span>
+      <span class="chip">products</span>
+      <span class="chip">typography</span>
+      <span class="chip">google fonts</span>
+      <span class="chip">icons</span>
+      <span class="chip">landing patterns</span>
+      <span class="chip">motion</span>
+      <span class="chip">ux guidelines</span>
+      <span class="chip">charts</span>
+    </div>
+  </section>
+
+  <!-- How it works: real numbered pipeline -->
+  <section class="section container" id="how-it-works">
+    <div class="section-head">
+      <h2>How it works</h2>
+    </div>
+    <ol class="steps">
+      <li><span class="step-num">1</span><p>Read the brief and declare a Design Read.</p></li>
+      <li><span class="step-num">2</span><p>Set the dials: DESIGN_VARIANCE, MOTION_INTENSITY, VISUAL_DENSITY.</p></li>
+      <li><span class="step-num">3</span><p>Query the engine with the dials attached.</p></li>
+      <li><span class="step-num">4</span><p>Follow catalog guidance plus taste discipline.</p></li>
+      <li><span class="step-num">5</span><p>Build the page.</p></li>
+      <li><span class="step-num">6</span><p>Self-check pre-flight.</p></li>
+      <li><span class="step-num">7</span><p>Gate with a real browser render.</p></li>
+    </ol>
+  </section>
+
+  <!-- Final CTA: one centered card -->
+  <section class="section container">
+    <div class="cta-card">
+      <h2>Build with taste, search with evidence</h2>
+      <p>Clone the pack, point your agent at it, and let the dials do the arguing before the code does.</p>
+      <a class="btn btn-accent" href="https://github.com/subimpact/redesign-uiux">Get the skill on GitHub</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <span>redesign-uiux - MIT</span>
+    <a href="https://github.com/subimpact/redesign-uiux">github.com/subimpact/redesign-uiux</a>
+    <span>taste-skill by Leonxlnx, MIT</span>
+    <span>ui-ux-pro-max by Next Level Builder, MIT</span>
+  </div>
+</footer>
+
+<script defer>
+(function () {
+  "use strict";
+
+  /* Demo 1: real BM25 over the embedded styles catalog (title, keywords, best-for, effects). */
+  var STYLES = [{"t":"Minimalism & Swiss Style","k":"Clean, simple, spacious, functional, white space, high contrast, geometric, sans-serif, grid-based, essential","b":"Enterprise apps, dashboards, documentation sites, SaaS platforms, professional tools","e":"Subtle hover (200-250ms), smooth transitions, sharp shadows if any, clear type hierarchy, fast loading"},{"t":"Neumorphism","k":"Soft UI, embossed, debossed, convex, concave, light source, subtle depth, rounded (12-16px), monochromatic","b":"Health/wellness apps, meditation platforms, fitness trackers, minimal interaction UIs","e":"Soft box-shadow (multiple: -5px -5px 15px, 5px 5px 15px), smooth press (150ms), inner subtle shadow"},{"t":"Glassmorphism","k":"Frosted glass, transparent, blurred background, layered, vibrant background, light source, depth, multi-layer","b":"Modern SaaS, financial dashboards, high-end corporate, lifestyle apps, modal overlays, navigation","e":"Backdrop blur (10-20px), subtle border (1px solid rgba white 0.2), light reflection, Z-depth"},{"t":"Brutalism","k":"Raw, unpolished, stark, high contrast, plain text, default fonts, visible borders, asymmetric, anti-design","b":"Design portfolios, artistic projects, counter-culture brands, editorial/media sites, tech blogs","e":"No smooth transitions (instant), sharp corners (0px), bold typography (700+), visible grid, large blocks"},{"t":"3D & Hyperrealism","k":"Depth, realistic textures, 3D models, spatial navigation, tactile, skeuomorphic elements, rich detail, immersive","b":"Gaming, product showcase, immersive experiences, high-end e-commerce, architectural viz, VR/AR","e":"WebGL/Three.js 3D, realistic shadows (layers), physics lighting, parallax (3-5 layers), smooth 3D (300-400ms)"},{"t":"Vibrant & Block-based","k":"Bold, energetic, playful, block layout, geometric shapes, high color contrast, duotone, modern, energetic","b":"Startups, creative agencies, gaming, social media, youth-focused, entertainment, consumer","e":"Large sections (48px+ gaps), animated patterns, bold hover (color shift), scroll-snap, large type (32px+), 200-300ms"},{"t":"Dark Mode (OLED)","k":"Dark theme, low light, high contrast, deep black, midnight blue, eye-friendly, OLED, night mode, power efficient","b":"Night-mode apps, coding platforms, entertainment, eye-strain prevention, OLED devices, low-light","e":"Minimal glow (text-shadow: 0 0 10px), dark-to-light transitions, low white emission, high readability, visible focus"},{"t":"Accessible & Ethical","k":"Accessible, inclusive interface, high contrast, large text (16px+), keyboard navigation, screen reader friendly, accessibility standards aware, focus state, semantic","b":"Government, healthcare, education, inclusive products, large audience, legal compliance, public","e":"Clear focus rings (3-4px), ARIA labels, skip links, responsive design, reduced motion, 44x44px touch targets"},{"t":"Claymorphism","k":"Soft 3D, chunky, playful, toy-like, bubbly, thick borders (3-4px), double shadows, rounded (16-24px)","b":"Educational apps, children's apps, SaaS platforms, creative tools, fun-focused, onboarding, casual games","e":"Inner+outer shadows (subtle, no hard lines), soft press (200ms ease-out), fluffy elements, smooth transitions"},{"t":"Aurora UI","k":"Vibrant gradients, smooth blend, Northern Lights effect, mesh gradient, luminous, atmospheric, abstract","b":"Modern SaaS, creative agencies, branding, music platforms, lifestyle, premium products, hero sections","e":"Large flowing CSS/SVG gradients, subtle 8-12s animations, depth via color layering, smooth morph"},{"t":"Retro-Futurism","k":"Vintage sci-fi, 80s aesthetic, neon glow, geometric patterns, CRT scanlines, pixel art, cyberpunk, synthwave","b":"Gaming, entertainment, music platforms, tech brands, artistic projects, nostalgic, cyberpunk","e":"CRT scanlines (::before overlay), neon glow (text-shadow+box-shadow), glitch effects (skew/offset keyframes)"},{"t":"Flat Design","k":"2D, minimalist, bold colors, no shadows, clean lines, simple shapes, typography-focused, modern, icon-heavy","b":"Web apps, mobile apps, cross-platform, startup MVPs, user-friendly, SaaS, dashboards, corporate","e":"No gradients/shadows, simple hover (color/opacity shift), fast loading, clean transitions (150-200ms ease), minimal icons"},{"t":"Skeuomorphism","k":"Realistic, texture, depth, 3D appearance, real-world metaphors, shadows, gradients, tactile, detailed, material","b":"Legacy apps, gaming, immersive storytelling, premium products, luxury, realistic simulations, education","e":"Realistic shadows (layers), depth (perspective), texture details (noise, grain), realistic animations (300-500ms)"},{"t":"Liquid Glass","k":"dynamic material, optical glass, translucency, lensing, refraction, fluid morphing, system navigation","b":"Apple-platform navigation, controls, and system-aligned app chrome","e":"Lensing and refraction, adaptive translucency, and fluid morph transitions aligned to Apple platform behavior"},{"t":"Motion-Driven","k":"Animation-heavy, microinteractions, smooth transitions, scroll effects, parallax, entrance anim, page transitions","b":"Portfolio sites, storytelling platforms, interactive experiences, entertainment apps, creative, SaaS","e":"Scroll anim (Intersection Observer), hover (300-400ms), entrance, parallax (3-5 layers), page transitions"},{"t":"Micro-interactions","k":"Small animations, gesture-based, tactile feedback, subtle animations, contextual interactions, responsive","b":"Mobile apps, touchscreen UIs, productivity tools, user-friendly, consumer apps, interactive components","e":"Small hover (50-100ms), loading spinners, success/error state anim, gesture-triggered (swipe/pinch), haptic"},{"t":"Inclusive Design","k":"Accessible, color-blind friendly, high contrast, haptic feedback, voice interaction, screen reader, enhanced contrast targets, universal","b":"Public services, education, healthcare, finance, government, accessible consumer, inclusive","e":"Haptic feedback (vibration), voice guidance, focus indicators (4px+ ring), motion options, alt content, semantic"},{"t":"Zero Interface","k":"Minimal visible UI, voice-first, gesture-based, AI-driven, invisible controls, predictive, context-aware, ambient","b":"Voice assistants, AI platforms, future-forward UX, smart home, contextual computing, ambient experiences","e":"Voice recognition UI, gesture detection, AI predictions (smooth reveal), progressive disclosure, smart suggestions"},{"t":"Soft UI Evolution","k":"Evolved soft UI, better contrast, modern aesthetics, subtle depth, accessibility-focused, improved shadows, hybrid","b":"Modern enterprise apps, SaaS platforms, health/wellness, modern business tools, professional, hybrid","e":"Improved shadows (softer than flat, clearer than neumorphism), modern (200-300ms), focus visible, measured contrast targets"},{"t":"Data-Dense Dashboard","k":"Multiple charts/widgets, data tables, KPI cards, minimal padding, grid layout, space-efficient, maximum data visibility","b":"Business intelligence dashboards, financial analytics, enterprise reporting, operational dashboards, data warehousing","e":"Hover tooltips, chart zoom on click, row highlighting on hover, smooth filter animations, data loading spinners"},{"t":"Neubrutalism","k":"Bold borders, black outlines, primary colors, thick shadows, no gradients, flat colors, 45° shadows, playful, Gen Z","b":"Gen Z brands, startups, creative agencies, Figma-style apps, Notion-style interfaces, tech blogs","e":"box-shadow: 4px 4px 0 #0A0A0A, border: 3px solid #0A0A0A, no gradients, sharp corners (0px), bold typography"},{"t":"Bento Box Grid","k":"Modular cards, asymmetric grid, varied sizes, Apple-style, dashboard tiles, negative space, clean hierarchy, cards","b":"Dashboards, product pages, portfolios, Apple-style marketing, feature showcases, SaaS","e":"grid-template with varied spans, rounded-xl (16px), subtle shadows, hover scale (1.02), smooth transitions"},{"t":"Y2K Aesthetic","k":"Neon pink, chrome, metallic, bubblegum, iridescent, glossy, retro-futurism, 2000s, futuristic nostalgia","b":"Fashion brands, music platforms, Gen Z brands, nostalgia marketing, entertainment, youth-focused","e":"linear-gradient metallic, glossy buttons, 3D chrome effects, glow animations, bubble shapes"},{"t":"Cyberpunk UI","k":"Neon, dark mode, terminal, HUD, sci-fi, glitch, dystopian, futuristic, matrix, tech noir","b":"Gaming platforms, tech products, crypto apps, sci-fi applications, developer tools, entertainment","e":"Neon glow (text-shadow), glitch animations (skew/offset), scanlines (::before overlay), terminal fonts"},{"t":"Organic Biophilic","k":"Nature, organic shapes, green, sustainable, rounded, flowing, wellness, earthy, natural textures","b":"Wellness apps, sustainability brands, eco products, health apps, meditation, organic food brands","e":"Rounded corners (16-24px), organic curves (border-radius variations), natural shadows, flowing SVG shapes"},{"t":"AI-Native UI","k":"Chatbot, conversational, voice, assistant, agentic, ambient, minimal chrome, streaming text, AI interactions","b":"AI products, chatbots, voice assistants, copilots, AI-powered tools, conversational interfaces","e":"Typing indicators (3-dot pulse), streaming text animations, pulse animations, context cards, smooth reveals"},{"t":"Memphis Design","k":"80s, geometric, playful, postmodern, shapes, patterns, squiggles, triangles, neon, abstract, bold","b":"Creative agencies, music sites, youth brands, event promotion, artistic portfolios, entertainment","e":"transform: rotate(), clip-path: polygon(), mix-blend-mode, repeating patterns, bold shapes"},{"t":"Dimensional Layering","k":"Depth, overlapping, z-index, layers, 3D, shadows, elevation, floating, cards, spatial hierarchy","b":"Dashboards, card layouts, modals, navigation, product showcases, SaaS interfaces","e":"z-index stacking, box-shadow elevation (4 levels), transform: translateZ(), backdrop-filter, parallax"},{"t":"Exaggerated Minimalism","k":"Bold minimalism, oversized typography, high contrast, negative space, loud minimal, statement design","b":"Fashion, architecture, portfolios, agency landing pages, luxury brands, editorial","e":"font-size: clamp(3rem 10vw 12rem), font-weight: 900, letter-spacing: -0.05em, massive whitespace"},{"t":"Kinetic Typography","k":"Motion text, animated type, moving letters, dynamic, typing effect, morphing, scroll-triggered text","b":"Hero sections, marketing sites, video platforms, storytelling, creative portfolios, landing pages","e":"@keyframes text animation, typing effect, background-clip: text, GSAP ScrollTrigger, split text"},{"t":"Parallax Storytelling","k":"Scroll-driven, narrative, layered scrolling, immersive, progressive disclosure, cinematic, scroll-triggered","b":"Brand storytelling, product launches, case studies, portfolios, annual reports, marketing campaigns","e":"transform: translateY(scroll), position: fixed/sticky, perspective: 1px, scroll-triggered animations"},{"t":"HUD / Sci-Fi FUI","k":"Futuristic, technical, wireframe, neon, data, transparency, iron man, sci-fi, interface","b":"Sci-fi games, space tech, cybersecurity, movie props, immersive dashboards","e":"Glow effects, scanning animations, ticker text, blinking markers, fine line drawing"},{"t":"Pixel Art","k":"Retro, 8-bit, 16-bit, gaming, blocky, nostalgic, pixelated, arcade","b":"Indie games, retro tools, creative portfolios, nostalgia marketing, Web3/NFT","e":"Frame-by-frame sprite animation, blinking cursor, instant transitions, marquee text"},{"t":"Spatial UI (VisionOS)","k":"Glass, depth, immersion, spatial, translucent, gaze, gesture, apple, vision-pro","b":"Spatial computing apps, VR/AR interfaces, immersive media, futuristic dashboards","e":"Parallax depth, dynamic lighting response, gaze-hover effects, smooth scale on focus"},{"t":"E-Ink / Paper","k":"Paper-like, matte, high contrast, texture, reading, calm, slow tech, monochrome","b":"Reading apps, digital newspapers, minimal journals, distraction-free writing, slow-living brands","e":"No motion blur, distinct page turns, grain/noise texture, sharp transitions (no fade)"},{"t":"Gen Z Chaos / Maximalism","k":"Chaos, clutter, stickers, raw, collage, mixed media, loud, internet culture, ironic","b":"Gen Z lifestyle brands, music artists, creative portfolios, viral marketing, fashion","e":"Marquee scrolls, jitter, sticker layering, GIF overload, random placement, drag-and-drop"},{"t":"Biomimetic / Organic 2.0","k":"Nature-inspired, cellular, fluid, breathing, generative, algorithms, life-like","b":"Sustainability tech, biotech, advanced health, meditation, generative art platforms","e":"Breathing animations, fluid morphing, generative growth, physics-based movement"},{"t":"Anti-Polish / Raw Aesthetic","k":"Hand-drawn, collage, scanned textures, unfinished, imperfect, authentic, human, sketch, raw marks, creative process","b":"Creative portfolios, artist sites, indie brands, handmade products, authentic storytelling, editorial","e":"No smooth transitions, hand-drawn animations, paper texture overlays, jitter effects, sketch reveal"},{"t":"Tactile Digital / Deformable UI","k":"Jelly buttons, chrome, clay, squishy, deformable, bouncy, physical, tactile feedback, press response","b":"Modern mobile apps, playful brands, entertainment, gaming UI, consumer products, interactive demos","e":"Press deformation (scale + squish), bounce-back (cubic-bezier), material response, haptic-like feedback, spring physics"},{"t":"Nature Distilled","k":"Muted earthy, skin tones, wood, soil, sand, terracotta, warmth, organic materials, handmade warmth","b":"Wellness brands, sustainable products, artisan goods, organic food, spa/beauty, home decor","e":"Subtle parallax, natural easing (ease-out), texture overlays, grain effects, soft shadows"},{"t":"Interactive Cursor Design","k":"Custom cursor, cursor as tool, hover effects, cursor feedback, pointer transformation, cursor trail, magnetic cursor","b":"Creative portfolios, interactive experiences, agency sites, product showcases, gaming, entertainment","e":"Cursor scale on hover, magnetic pull to elements, cursor morphing, trail effects, blend mode cursors, click feedback"},{"t":"Voice-First Multimodal","k":"Voice UI, multimodal, audio feedback, conversational, hands-free, ambient, contextual, speech recognition","b":"Voice assistants, accessibility apps, hands-free tools, smart home, automotive UI, cooking apps","e":"Voice waveform visualization, listening pulse, processing spinner, speak animation, smooth transitions"},{"t":"3D Product Preview","k":"360 product view, rotatable, zoomable, touch-to-spin, AR preview, product configurator, interactive 3D model","b":"E-commerce, furniture, fashion, automotive, electronics, jewelry, product configurators","e":"Drag-to-rotate, pinch-to-zoom, spin animation, AR placement, material switching, smooth orbit controls"},{"t":"Editorial Grid / Magazine","k":"Magazine layout, asymmetric grid, editorial typography, pull quotes, drop caps, column layout, print-inspired","b":"News sites, blogs, magazines, editorial content, long-form articles, journalism, publishing","e":"Smooth scroll, reveal on scroll, parallax images, text animations, page-flip transitions"},{"t":"Vintage Analog / Retro Film","k":"Film grain, VHS, cassette tape, polaroid, analog warmth, faded colors, light leaks, vintage photography","b":"Photography portfolios, music/vinyl brands, vintage fashion, nostalgia marketing, film industry, cafes","e":"Film grain overlay, VHS tracking effect, polaroid shake, fade-in transitions, light leak animations"},{"t":"Bauhaus (包豪斯)","k":"bauhaus, geometric, constructivist, primary colors, hard shadow, bold, tactile, functional, poster, mechanical, architectural","b":"Mobile-first apps needing high personality, onboarding flows, branding-forward product screens, artisan/design brands, editorial mobile experiences","e":"Hard offset shadows (4px 4px 0px black), mechanical press active:translate, no smooth hover - instant 0ms transitions, dot grid pattern on sections, slide-over transitions"},{"t":"Material 3 Expressive (Mobile)","k":"material 3 expressive, vibrant color, spring motion, adaptive components, flexible typography, contrasting shapes, android","b":"Android, Wear OS, and Pixel-aligned products using Material 3 components","e":"Tonal elevation (overlay colors instead of strong shadows), pill-shaped buttons and chips (borderRadius 999), emphasized easing Easing.bezier(0.2,0,0,1), state layers (pressed overlays 10-15% opacity), Reanimated-filled label float for inputs, HapticFeedback on FAB/toggles"},{"t":"Fluent 2","k":"fluent 2, microsoft, enterprise, calm, rounded, tokenized, cross-platform, copilot","b":"Microsoft 365, Windows, Copilot, and enterprise line-of-business tools","e":"Subtle depth, calm transitions, platform-adaptive motion"},{"t":"Shopify Polaris","k":"shopify polaris, merchant admin, commerce, checkout, web components, app home","b":"Shopify admin apps, merchant tools, checkout, customer accounts, POS, and extensions","e":"Purposeful admin feedback and restrained transitions"},{"t":"Adobe Spectrum","k":"adobe spectrum, creative tools, enterprise, content creation, tokenized, cross-platform","b":"Creative tools, media workflows, document products, and Adobe-adjacent enterprise software","e":"Layered depth and restrained professional motion"}];
+  var STOP = { a: 1, an: 1, the: 1, for: 1, and: 1, with: 1, of: 1, to: 1, in: 1, on: 1, or: 1, is: 1, it: 1 };
+  var k1 = 1.4, b = 0.75;
+  var FIELDS = [
+    { key: "t", weight: 3 },
+    { key: "k", weight: 2.5 },
+    { key: "b", weight: 1.5 },
+    { key: "e", weight: 1 }
+  ];
+  var N = STYLES.length;
+
+  function tokens(s) {
+    return String(s).toLowerCase().split(/[^a-z0-9]+/).filter(function (t) {
+      return t.length > 1 && !STOP[t];
+    });
+  }
+  var index = STYLES.map(function (doc) {
+    var f = {};
+    FIELDS.forEach(function (field) {
+      var tks = tokens(doc[field.key]);
+      var tf = {};
+      tks.forEach(function (t) { tf[t] = (tf[t] || 0) + 1; });
+      f[field.key] = { tf: tf, len: tks.length };
+    });
+    return f;
+  });
+  FIELDS.forEach(function (field) {
+    field.df = {};
+    field.avgdl = 0;
+    index.forEach(function (doc) {
+      var f = doc[field.key];
+      field.avgdl += f.len;
+      Object.keys(f.tf).forEach(function (t) {
+        field.df[t] = (field.df[t] || 0) + 1;
+      });
+    });
+    field.avgdl = N ? field.avgdl / N : 0;
+  });
+
+  function search(query) {
+    var qts = tokens(query);
+    if (!qts.length) return null;
+    var scores = [];
+    index.forEach(function (doc, i) {
+      var score = 0;
+      FIELDS.forEach(function (field) {
+        var f = doc[field.key];
+        if (!f.len) return;
+        var fieldScore = 0;
+        qts.forEach(function (t) {
+          var tf = f.tf[t];
+          if (!tf) return;
+          var df = field.df[t];
+          var idf = Math.log(1 + (N - df + 0.5) / (df + 0.5));
+          fieldScore += idf * (tf * (k1 + 1)) / (tf + k1 * (1 - b + b * f.len / field.avgdl));
+        });
+        score += field.weight * fieldScore;
+      });
+      if (score > 0) scores.push({ i: i, score: score });
+    });
+    scores.sort(function (a, b) { return b.score - a.score; });
+    return scores;
+  }
+
+  var form = document.getElementById("search-form");
+  var input = document.getElementById("search-input");
+  var output = document.getElementById("demo-output");
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    var query = input.value.trim();
+    output.className = "demo-output";
+    if (!query) {
+      output.textContent = "";
+      var hint = document.createElement("p");
+      hint.className = "result-desc";
+      hint.textContent = "Type a query first, like \"dark hero landing\" or \"developer font pairing\".";
+      output.appendChild(hint);
+      output.hidden = false;
+      void output.offsetWidth;
+      output.classList.add("reveal");
+      return;
+    }
+    var hits = search(query);
+    output.textContent = "";
+    if (!hits || !hits.length) {
+      var miss = document.createElement("p");
+      miss.className = "result-desc";
+      miss.textContent = "No match in the styles catalog. Try a broader query.";
+      output.appendChild(miss);
+      output.hidden = false;
+      void output.offsetWidth;
+      output.classList.add("reveal");
+      return;
+    }
+    var top = STYLES[hits[0].i];
+    var label = document.createElement("p");
+    label.className = "result-label";
+    label.textContent = "Top result";
+    var title = document.createElement("p");
+    title.className = "result-title";
+    title.textContent = top.t;
+    var desc = document.createElement("p");
+    desc.className = "result-desc";
+    desc.textContent = "Best for: " + top.b;
+    var keywords = document.createElement("p");
+    keywords.className = "result-keywords";
+    keywords.textContent = top.k;
+    output.appendChild(label);
+    output.appendChild(title);
+    output.appendChild(desc);
+    output.appendChild(keywords);
+    output.hidden = false;
+    void output.offsetWidth;
+    output.classList.add("reveal");
+  });
+
+  /* Demo 2: live dial bridge command + copy with inline feedback. */
+  var QUERY = '"modern saas landing"';
+  var cmdV = document.getElementById("cmd-v");
+  var cmdM = document.getElementById("cmd-m");
+  var cmdD = document.getElementById("cmd-d");
+  var outV = document.getElementById("out-v");
+  var outM = document.getElementById("out-m");
+  var outD = document.getElementById("out-d");
+  var copyBtn = document.getElementById("copy-cmd");
+  var dialIds = { v: "dial-v", m: "dial-m", d: "dial-d" };
+  var dials = { v: 7, m: 6, d: 4 };
+
+  function clampValue(n) { return Math.min(10, Math.max(1, n)); }
+
+  function renderCommand() {
+    cmdV.textContent = dials.v;
+    cmdM.textContent = dials.m;
+    cmdD.textContent = dials.d;
+    outV.textContent = dials.v;
+    outM.textContent = dials.m;
+    outD.textContent = dials.d;
+  }
+
+  function applyDial(key) {
+    var el = document.getElementById(dialIds[key]);
+    dials[key] = clampValue(parseInt(el.value, 10) || 1);
+    renderCommand();
+  }
+
+  ["v", "m", "d"].forEach(function (key) {
+    document.getElementById(dialIds[key]).addEventListener("input", function () {
+      applyDial(key);
+    });
+  });
+
+  function getCommandText() {
+    return 'python skills/ui-ux-pro-max/scripts/search.py "' + "modern saas landing" + '" --design-system --variance ' + dials.v + " --motion " + dials.m + " --density " + dials.d;
+  }
+
+  var resetTimer = null;
+  function showCopied() {
+    copyBtn.textContent = "Copied";
+    if (resetTimer) clearTimeout(resetTimer);
+    resetTimer = setTimeout(function () {
+      copyBtn.textContent = "Copy";
+    }, 1600);
+  }
+
+  copyBtn.addEventListener("click", function () {
+    var text = getCommandText();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(showCopied, function () {
+        fallbackCopy(text);
+      });
+    } else {
+      fallbackCopy(text);
+    }
+  });
+
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      showCopied();
+    } catch (err) {
+      copyBtn.textContent = "Copy failed";
+      if (resetTimer) clearTimeout(resetTimer);
+      resetTimer = setTimeout(function () { copyBtn.textContent = "Copy"; }, 1600);
+    }
+    document.body.removeChild(ta);
+  }
+
+  renderCommand();
+})();
+</script>
+
+</body>
+</html>
